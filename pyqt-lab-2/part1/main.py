@@ -58,9 +58,9 @@ class MainWindow(QWidget):
         bio_label.move(15, 210)
 
         global about_label, detailed_description, short_description
-        short_description = "Предприниматель\n\n"
+        short_description = "Предприниматель \t\t\n\n"
         detailed_description = "Предприниматель "\
-                               "Директор ООО АЛ-ТЕХ "
+                               "Директор ООО АЛ-ТЕХ и ООО Дельфин "
         about_label = QLabel(self)
         about_label.setText(short_description)
         about_label.setWordWrap(True)
