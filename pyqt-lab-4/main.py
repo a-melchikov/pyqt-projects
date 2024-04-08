@@ -78,6 +78,13 @@ class ExpenseCalculator(QWidget):
         self.save_button = QPushButton('Сохранить', self)
         button_layout.addWidget(self.save_button)
 
+        # Создаем кнопку "Загрузить"
+        self.load_button = QPushButton('Загрузить', self)
+        button_layout.addWidget(self.load_button)
+
+        # Подключаем метод загрузки данных к сигналу нажатия кнопки "Загрузить"
+        self.load_button.clicked.connect(self.load_data)
+
         # Подключаем метод сохранения данных к сигналу нажатия кнопки "Сохранить"
         self.save_button.clicked.connect(self.save_data)
 
@@ -162,6 +169,26 @@ class ExpenseCalculator(QWidget):
             # Сохраняем данные в JSON файл
             with open(file_name, 'w') as file:
                 json.dump(data, file, indent=4)
+
+    def load_data(self):
+        file_name, _ = QFileDialog.getOpenFileName(self, "Выбрать файл", "", "JSON (*.json);;All Files (*)")
+        if file_name:
+            with open(file_name, 'r') as file:
+                data = json.load(file)
+
+            # Очищаем таблицу перед загрузкой новых данных
+            self.table_widget.setRowCount(0)
+
+            # Заполняем таблицу данными из файла
+            for item in data:
+                row_position = self.table_widget.rowCount()
+                self.table_widget.insertRow(row_position)
+                self.table_widget.setItem(row_position, 0, QTableWidgetItem(item['amount']))
+                self.table_widget.setItem(row_position, 1, QTableWidgetItem(item['category']))
+                self.table_widget.setItem(row_position, 2, QTableWidgetItem(item['date']))
+
+            # Обновляем общую сумму после загрузки данных
+            self.update_total_amount()
 
 
 if __name__ == '__main__':
