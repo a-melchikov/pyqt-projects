@@ -73,6 +73,9 @@ class ExpenseCalculator(QWidget):
         self.reset_button = QPushButton('Сброс')
         button_layout.addWidget(self.reset_button)
 
+        # Подключаем метод удаления записей к сигналу нажатия кнопки "Удалить запись"
+        self.delete_record_button.clicked.connect(self.delete_record)
+
         # Подключаем метод добавления записей к сигналу нажатия кнопки "Добавить запись"
         self.add_record_button.clicked.connect(self.add_record)
 
@@ -107,6 +110,19 @@ class ExpenseCalculator(QWidget):
         self.amount_input.clear()
         self.category_combobox.setCurrentIndex(0)
         self.date_input.setDateTime(self.date_input.minimumDateTime())
+
+    def delete_record(self):
+        selected_rows = set()  # Создаем множество для хранения индексов выбранных строк
+        for item in self.table_widget.selectedItems():
+            selected_rows.add(item.row())  # Добавляем индекс выбранной строки в множество
+
+        # Удаляем выбранные строки из таблицы
+        for row in sorted(selected_rows, reverse=True):
+            self.table_widget.removeRow(row)
+
+        # Обновляем общую сумму после удаления записей
+        self.update_total_amount()
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
