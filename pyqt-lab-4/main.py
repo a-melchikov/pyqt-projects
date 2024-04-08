@@ -73,6 +73,9 @@ class ExpenseCalculator(QWidget):
         self.reset_button = QPushButton('Сброс')
         button_layout.addWidget(self.reset_button)
 
+        # Подключаем метод сброса настроек к сигналу нажатия кнопки "Сброс"
+        self.reset_button.clicked.connect(self.reset_settings)
+
         # Подключаем метод удаления записей к сигналу нажатия кнопки "Удалить запись"
         self.delete_record_button.clicked.connect(self.delete_record)
 
@@ -123,6 +126,12 @@ class ExpenseCalculator(QWidget):
         # Обновляем общую сумму после удаления записей
         self.update_total_amount()
 
+    def reset_settings(self):
+        # Удаляем все записи из таблицы
+        self.table_widget.setRowCount(0)
+
+        # Обновляем общую сумму после сброса настроек
+        self.update_total_amount()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
