@@ -1,6 +1,6 @@
 import sys
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QTableWidget, \
-    QTableWidgetItem, QHeaderView
+	QTableWidgetItem, QHeaderView, QLabel, QLineEdit, QComboBox, QDateTimeEdit
 
 
 class ExpenseCalculator(QWidget):
@@ -29,6 +29,30 @@ class ExpenseCalculator(QWidget):
 
         # Создаем компоновку для кнопок
         button_layout = QHBoxLayout()
+
+        # Создаем компоновку для полей ввода
+        input_layout = QHBoxLayout()
+
+        # Поле ввода для суммы
+        self.amount_label = QLabel('Сумма:')
+        self.amount_input = QLineEdit()
+        input_layout.addWidget(self.amount_label)
+        input_layout.addWidget(self.amount_input)
+
+        # Поле выбора категории
+        self.category_label = QLabel('Категория:')
+        self.category_combobox = QComboBox()
+        self.category_combobox.addItems(['Продукты', 'Развлечения', 'Транспорт', 'Жилье', 'Здоровье', 'Прочее'])
+        input_layout.addWidget(self.category_label)
+        input_layout.addWidget(self.category_combobox)
+
+        # Поле ввода даты
+        self.date_label = QLabel('Дата:')
+        self.date_input = QDateTimeEdit()
+        input_layout.addWidget(self.date_label)
+        input_layout.addWidget(self.date_input)
+
+        main_layout.addLayout(input_layout)  # Добавляем компоновку полей ввода в общую компоновку
 
         # Создаем кнопку "Добавить запись"
         self.add_record_button = QPushButton('Добавить запись')
