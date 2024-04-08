@@ -1,8 +1,9 @@
+import json
 import sys
 
 from PyQt6.QtCore import QDateTime
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QTableWidget, \
-    QTableWidgetItem, QHeaderView, QLabel, QLineEdit, QComboBox, QDateTimeEdit, QMessageBox
+    QTableWidgetItem, QHeaderView, QLabel, QLineEdit, QComboBox, QDateTimeEdit, QMessageBox, QFileDialog
 
 
 class ExpenseCalculator(QWidget):
@@ -73,6 +74,13 @@ class ExpenseCalculator(QWidget):
         self.reset_button = QPushButton('Сброс')
         button_layout.addWidget(self.reset_button)
 
+        # Создаем кнопку "Сохранить"
+        self.save_button = QPushButton('Сохранить', self)
+        button_layout.addWidget(self.save_button)
+
+        # Подключаем метод сохранения данных к сигналу нажатия кнопки "Сохранить"
+        self.save_button.clicked.connect(self.save_data)
+
         # Подключаем метод сброса настроек к сигналу нажатия кнопки "Сброс"
         self.reset_button.clicked.connect(self.reset_settings)
 
@@ -138,6 +146,23 @@ class ExpenseCalculator(QWidget):
 
             # Обновляем общую сумму после сброса настроек
             self.update_total_amount()
+
+    def save_data(self):
+        file_name, _ = QFileDialog.getSaveFileName(self, "Сохранить файл", "", "JSON (*.json);;All Files (*)")
+        if file_name:
+            data = []
+
+            # Собираем данные из таблицы
+            for row in range(self.table_widget.rowCount()):
+                amount = self.table_widget.item(row, 0).text()
+                category = self.table_widget.item(row, 1).text()
+                date = self.table_widget.item(row, 2).text()
+                data.append({"amount": amount, "category": category, "date": date})
+
+            # Сохраняем данные в JSON файл
+            with open(file_name, 'w') as file:
+                json.dump(data, file, indent=4)
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
