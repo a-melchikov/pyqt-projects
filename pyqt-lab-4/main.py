@@ -2,7 +2,7 @@ import sys
 
 from PyQt6.QtCore import QDateTime
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QTableWidget, \
-    QTableWidgetItem, QHeaderView, QLabel, QLineEdit, QComboBox, QDateTimeEdit
+    QTableWidgetItem, QHeaderView, QLabel, QLineEdit, QComboBox, QDateTimeEdit, QMessageBox
 
 
 class ExpenseCalculator(QWidget):
@@ -115,23 +115,29 @@ class ExpenseCalculator(QWidget):
         self.date_input.setDateTime(self.date_input.minimumDateTime())
 
     def delete_record(self):
-        selected_rows = set()  # Создаем множество для хранения индексов выбранных строк
-        for item in self.table_widget.selectedItems():
-            selected_rows.add(item.row())  # Добавляем индекс выбранной строки в множество
+        confirmation = QMessageBox.question(self, 'Подтверждение удаления', 'Вы уверены, что хотите удалить выбранные записи?',
+                                            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        if confirmation == QMessageBox.StandardButton.Yes:
+            selected_rows = set()  # Создаем множество для хранения индексов выбранных строк
+            for item in self.table_widget.selectedItems():
+                selected_rows.add(item.row())  # Добавляем индекс выбранной строки в множество
 
-        # Удаляем выбранные строки из таблицы
-        for row in sorted(selected_rows, reverse=True):
-            self.table_widget.removeRow(row)
+            # Удаляем выбранные строки из таблицы
+            for row in sorted(selected_rows, reverse=True):
+                self.table_widget.removeRow(row)
 
-        # Обновляем общую сумму после удаления записей
-        self.update_total_amount()
+            # Обновляем общую сумму после удаления записей
+            self.update_total_amount()
 
     def reset_settings(self):
-        # Удаляем все записи из таблицы
-        self.table_widget.setRowCount(0)
+        confirmation = QMessageBox.question(self, 'Подтверждение сброса', 'Вы уверены, что хотите сбросить все данные?',
+                                            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        if confirmation == QMessageBox.StandardButton.Yes:
+            # Удаляем все записи из таблицы
+            self.table_widget.setRowCount(0)
 
-        # Обновляем общую сумму после сброса настроек
-        self.update_total_amount()
+            # Обновляем общую сумму после сброса настроек
+            self.update_total_amount()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
